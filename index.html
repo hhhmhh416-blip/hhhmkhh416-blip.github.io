@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>اختبار تفاعلي</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f0ebf8;--card:#fff;--bd:#dadce0;--tx:#202124;--tx2:#5f6368;--pr:#673ab7;--band:#673ab7;--prbg:#ede7f6;--er:#d93025;--ok:#188038;--okbg:#e6f4ea;--badbg:#fce8e6;--hov:rgba(103,58,183,.1);--fld:#f8f9fa;--blue:#4285f4;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#202124;--card:#2d2e31;--bd:#5f6368;--tx:#e8eaed;--tx2:#9aa0a6;--pr:#b39ddb;--prbg:#3a3350;--er:#f28b82;--ok:#81c995;--okbg:#1e3a2a;--badbg:#42221f;--hov:rgba(179,157,219,.16);--fld:#3c3d40}}
+:root[data-theme="dark"]{--bg:#202124;--card:#2d2e31;--bd:#5f6368;--tx:#e8eaed;--tx2:#9aa0a6;--pr:#b39ddb;--prbg:#3a3350;--er:#f28b82;--ok:#81c995;--okbg:#1e3a2a;--badbg:#42221f;--hov:rgba(179,157,219,.16);--fld:#3c3d40}
+*{box-sizing:border-box;margin:0}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{min-height:100vh;font-family:Roboto,'Noto Sans Arabic',Arial,sans-serif;font-size:15px;color:var(--tx);background:var(--bg)}
+.screen{display:none}.screen.active{display:block;animation:fade .4s}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.wrap{max-width:770px;margin:0 auto;padding:14px 12px 96px}
+.gcard{background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:22px 24px;margin-bottom:12px;position:relative;animation:rise .45s both;transition:box-shadow .2s,border-color .2s}
+.gcard.head{border-top:10px solid var(--band);padding-top:20px}
+.gcard.head h1{font-size:32px;font-weight:400;line-height:1.35;margin-bottom:8px}
+.dsc{color:var(--tx);line-height:1.7;margin-bottom:6px;white-space:pre-wrap}
+.hr{border-top:1px solid var(--bd);margin:14px -24px}
+.reqn{color:var(--er);font-size:13px}
+.qt{font-size:16px;line-height:1.6;margin-bottom:12px;font-weight:500}
+.star{color:var(--er);margin-inline-start:4px}
+.opt{display:flex;align-items:center;gap:14px;padding:6px 8px;margin:0 -8px;border-radius:6px;cursor:pointer;line-height:1.5;transition:background .2s}
+.rd{width:20px;height:20px;border-radius:50%;border:2px solid var(--tx2);flex:none;position:relative;transition:border-color .2s,box-shadow .2s}
+.rd::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--pr);transform:scale(0);transition:transform .2s}
+.opt:hover:not(.done) .rd{box-shadow:0 0 0 9px var(--hov);border-color:var(--pr)}
+.opt.done{cursor:default}
+.opt.pk .rd{border-color:var(--pr)}.opt.pk .rd::after{transform:scale(1)}
+.opt.ok{background:var(--okbg);color:var(--ok);animation:okp .6s}
+.opt.ok .rd{border-color:var(--ok)}.opt.ok .rd::after{background:var(--ok)}
+.opt.bad{background:var(--badbg);color:var(--er);animation:shake .5s}
+.opt.bad .rd{border-color:var(--er)}.opt.bad .rd::after{background:var(--er)}
+.opt.rev{background:var(--okbg);color:var(--ok);animation:okp .6s .25s both}
+.opt.rev .rd{border-color:var(--ok);box-shadow:0 0 0 3px var(--okbg)}
+@keyframes okp{0%,100%{transform:scale(1)}40%{transform:scale(1.03)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-10px)}40%{transform:translateX(10px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+.fb{margin-top:14px;padding:12px 14px;border-radius:8px;display:flex;gap:10px;align-items:center;font-weight:500;animation:msgIn .45s cubic-bezier(.2,1.3,.4,1)}
+.fb.g{background:var(--okbg);color:var(--ok)}.fb.r{background:var(--badbg);color:var(--er)}
+@keyframes msgIn{from{opacity:0;transform:translateY(12px) scale(.94)}to{opacity:1;transform:none}}
+.ico{width:22px;height:22px;flex:none;fill:currentColor}
+.gcard.invalid{border-color:var(--er)}
+.rerr{display:flex;align-items:center;gap:8px;color:var(--er);font-size:13px;margin-top:12px;animation:msgIn .3s}
+.rerr .ico{width:18px;height:18px}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.between{justify-content:space-between}
+.btn{font:inherit;font-weight:500;letter-spacing:.2px;border:0;cursor:pointer;background:var(--band);color:#fff;border-radius:4px;padding:10px 26px;height:38px;transition:box-shadow .2s,transform .15s,filter .2s}
+.btn:hover{box-shadow:0 1px 3px rgba(60,64,67,.4),0 4px 8px 3px rgba(60,64,67,.15);filter:brightness(1.08)}
+.btn:active{transform:scale(.97)}
+.btn.pill{border-radius:20px}
+.link{font:inherit;font-weight:500;background:none;border:0;color:var(--pr);cursor:pointer;padding:9px 12px;border-radius:4px;transition:background .2s}
+.link:hover{background:var(--hov)}
+.prev{background:var(--prbg);color:var(--pr);padding:8px 16px;display:none;align-items:center;justify-content:space-between;font-weight:500}
+.prev.show{display:flex}
+/* login */
+.center{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
+.signin{width:100%;max-width:450px;background:var(--card);border:1px solid var(--bd);border-radius:28px;padding:44px 40px 32px;animation:rise .5s both}
+.signin .logo{width:48px;height:48px;fill:var(--band);display:block;margin-bottom:14px}
+.signin h2{font-size:24px;font-weight:400;margin-bottom:8px}
+.signin p{color:var(--tx);margin-bottom:26px}
+.of{position:relative;margin-bottom:8px}
+.of input{width:100%;font:inherit;color:var(--tx);background:transparent;border:1px solid var(--tx2);border-radius:4px;padding:16px 14px;outline:none;transition:border-color .15s}
+.of input:focus{border:2px solid var(--pr);padding:15px 13px}
+.of label{position:absolute;inset-inline-start:10px;top:16px;background:var(--card);padding:0 4px;color:var(--tx2);transition:all .15s;pointer-events:none}
+.of input:focus+label,.of input:not(:placeholder-shown)+label{top:-9px;font-size:12px;color:var(--pr)}
+.of.bad input{border-color:var(--er)}.of.bad{animation:shake .5s}
+.perr{color:var(--er);font-size:13px;min-height:20px;margin-bottom:6px}
+.chk{display:flex;align-items:center;gap:10px;margin:10px 0 30px;cursor:pointer;color:var(--tx)}
+.chk input{accent-color:var(--pr);width:18px;height:18px}
+/* editor */
+.bar{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--bd);padding:8px 16px;display:flex;align-items:center;gap:12px}
+.bar .logo{width:34px;height:34px;fill:var(--band)}
+.bar .ttl{flex:1;font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.htitle,.hdesc,.qtitle,.uline{font:inherit;color:var(--tx);background:transparent;border:0;outline:none;width:100%}
+.htitle{font-size:32px;padding:6px 0;border-bottom:1px solid transparent}
+.hdesc{padding:6px 0;margin-top:6px;border-bottom:1px solid transparent}
+.htitle:focus,.hdesc:focus,.uline:focus{border-bottom:2px solid var(--pr)}
+.htitle:hover,.hdesc:hover{border-bottom-color:var(--bd)}
+.gcard.edit{cursor:default}
+.gcard.edit.active{border-inline-start:6px solid var(--blue);box-shadow:0 1px 4px rgba(60,64,67,.3)}
+.qtitle{background:var(--fld);padding:16px;font-size:16px;border-bottom:1px solid var(--tx2);margin-bottom:14px;transition:border-color .2s}
+.qtitle:focus{border-bottom:2px solid var(--pr)}
+.orow{display:flex;align-items:center;gap:12px;margin-bottom:6px;animation:fade .3s}
+.orow .rd{cursor:pointer}
+.orow .rd.sel{border-color:var(--ok)}.orow .rd.sel::after{background:var(--ok);transform:scale(1)}
+.orow .rd:hover{box-shadow:0 0 0 8px var(--hov)}
+.uline{padding:8px 0;border-bottom:1px solid transparent}.orow:hover .uline{border-bottom-color:var(--bd)}
+.ib{background:none;border:0;cursor:pointer;color:var(--tx2);border-radius:50%;width:36px;height:36px;display:grid;place-items:center;transition:background .2s}
+.ib:hover{background:var(--hov)}
+.efoot{border-top:1px solid var(--bd);margin:16px -24px 0;padding:8px 16px 0;display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--tx2);font-size:13px}
+.fab{position:fixed;inset-inline-end:16px;bottom:calc(24px + env(safe-area-inset-bottom,0px));width:56px;height:56px;border-radius:50%;border:0;background:var(--band);color:#fff;cursor:pointer;display:grid;place-items:center;box-shadow:0 3px 8px rgba(0,0,0,.35);transition:transform .2s;z-index:30}
+.fab:hover{transform:scale(1.1) rotate(90deg)}.fab .ico{width:28px;height:28px}
+.snack{position:fixed;bottom:calc(24px + env(safe-area-inset-bottom,0px));inset-inline-start:50%;transform:translate(50%,90px);background:#323232;color:#fff;padding:13px 22px;border-radius:4px;z-index:60;transition:transform .3s;max-width:90vw}
+[dir=rtl] .snack{transform:translate(50%,90px)}.snack.show{transform:translate(50%,0)}
+/* result */
+.res{text-align:center;padding:30px 24px}
+.medal{display:flex;justify-content:center;gap:8px;margin-bottom:6px}
+.medal .ico{width:40px;height:40px;color:#f9ab00;filter:drop-shadow(0 0 8px rgba(249,171,0,.7));animation:glow 1.5s ease-in-out infinite}
+.medal .ico:nth-child(2){width:56px;height:56px;animation-delay:.2s}.medal .ico:nth-child(3){animation-delay:.4s}
+.medal.fail .ico{color:var(--pr);filter:none;width:52px;height:52px}
+@keyframes glow{50%{transform:scale(1.22);filter:drop-shadow(0 0 16px rgba(249,171,0,1))}}
+.score b{font-size:56px;font-weight:400;display:block;line-height:1.2}
+.score span{color:var(--tx2);font-size:18px}
+.track{height:8px;background:var(--prbg);border-radius:8px;overflow:hidden;margin:18px auto;max-width:360px}
+.track i{display:block;height:100%;width:0;background:var(--band);border-radius:8px;transition:width 1.4s cubic-bezier(.2,.8,.2,1)}
+.rmsg{font-size:19px;line-height:1.8;margin:8px 0 18px}
+canvas{position:fixed;inset:0;pointer-events:none;z-index:50}
+:focus-visible{outline:2px solid var(--pr);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-iteration-count:1!important;transition-duration:.01s!important}}
+@media(max-width:500px){.signin{padding:32px 22px 24px;border:0;background:var(--card)}.gcard{padding:18px 16px}.hr,.efoot{margin-inline:-16px}.gcard.head h1,.htitle{font-size:26px}}
+.bar{flex-wrap:wrap;padding:0 16px;gap:6px}.bar .ttl{flex:1 1 140px}
+.tab{font:inherit;font-weight:500;background:none;border:0;border-bottom:3px solid transparent;color:var(--tx2);padding:16px 14px;cursor:pointer;transition:background .2s,color .2s}
+.tab:hover{background:var(--hov)}.tab.on{color:var(--pr);border-bottom-color:var(--pr)}
+.adm{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));inset-inline-end:12px;z-index:15;display:flex;align-items:center;gap:6px;font:inherit;font-size:13px;font-weight:500;color:var(--tx2);background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:6px 14px;cursor:pointer;transition:background .2s,color .2s}
+.adm:hover{background:var(--hov);color:var(--pr)}.adm .ico{width:16px;height:16px}
+.sw{position:relative;width:42px;height:22px;border-radius:11px;border:0;background:var(--bd);cursor:pointer;flex:none;transition:background .2s}
+.sw::after{content:"";position:absolute;top:2px;inset-inline-start:2px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.4);transition:inset-inline-start .2s}
+.sw.on{background:var(--pr)}.sw.on::after{inset-inline-start:22px}
+.setrow{display:flex;justify-content:space-between;align-items:center;gap:18px}
+.trow{display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap}.trow .qtitle{flex:1 1 220px;margin-bottom:0}
+.tsel{font:inherit;color:var(--tx);background:var(--card);border:1px solid var(--bd);border-radius:4px;padding:0 12px;height:52px;min-width:170px;cursor:pointer}
+.uprev{border-bottom:1px dotted var(--tx2);color:var(--tx2);padding:10px 0;margin-bottom:16px;width:60%}
+.acc label{display:block;font-size:13px;color:var(--tx2);margin-bottom:2px}.acc .uline{border-bottom:1px solid var(--bd)}
+.ansrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.ans{font:inherit;color:var(--tx);background:transparent;border:0;border-bottom:1px solid var(--bd);outline:none;padding:8px 0;flex:1 1 240px;max-width:100%;transition:border-color .2s}
+.ans:focus{border-bottom:2px solid var(--pr)}
+.ans.ok{border-bottom-color:var(--ok);color:var(--ok)}.ans.bad{border-bottom-color:var(--er);color:var(--er);animation:shake .5s}
+.stats{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}.stat{flex:1 1 130px;text-align:center;background:var(--fld);border-radius:8px;padding:14px 8px}
+.stat b{font-size:32px;font-weight:400;display:block}.stat span{color:var(--tx2);font-size:13px}
+.scroll{overflow-x:auto}.tbl{width:100%;border-collapse:collapse;min-width:540px}
+.tbl th,.tbl td{padding:10px;text-align:start;border-bottom:1px solid var(--bd)}.tbl th{color:var(--tx2);font-weight:500;font-size:13px}
+.tbl tbody tr{animation:fade .3s both}.tbl tbody tr:hover td{background:var(--hov)}
+.badge{display:inline-block;padding:2px 12px;border-radius:12px;font-size:13px;font-weight:500;background:var(--fld);color:var(--tx2)}
+.badge.p{background:var(--okbg);color:var(--ok)}.badge.f{background:var(--badbg);color:var(--er)}
+.danger{color:var(--er)}.danger:hover{background:var(--badbg)}
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+
+<div class="bar" id="bar" style="display:none"><svg class="logo" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM7 12h2v2H7v-2zm0 4h2v2H7v-2zm4-4h6v2h-6v-2zm0 4h6v2h-6v-2zm2-6V3.5L18.5 9H13z"/></svg><div class="ttl" id="barTitle"></div><button class="tab" id="tabQ"></button><button class="tab" id="tabR"></button><button class="link" id="previewBtn"></button><button class="link" id="logoutBtn"></button></div>
+
+<section id="login" class="screen"><div class="center"><div class="signin">
+  <svg class="logo" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM7 12h2v2H7v-2zm0 4h2v2H7v-2zm4-4h6v2h-6v-2zm0 4h6v2h-6v-2zm2-6V3.5L18.5 9H13z"/></svg>
+  <h2>تسجيل الدخول</h2>
+  <p>للمسؤول فقط: أدخل كلمة المرور لإدارة الأسئلة</p>
+  <div class="of" id="pwWrap"><input id="pw" type="password" placeholder=" " autocomplete="off"><label for="pw">كلمة المرور</label></div>
+  <div class="perr" id="pwErr"></div>
+  <label class="chk"><input type="checkbox" id="showPw"> إظهار كلمة المرور</label>
+  <div class="row between"><button class="link" id="guestBtn">العودة للامتحان</button><button class="btn pill" id="loginBtn">تسجيل الدخول</button></div>
+</div></div></section>
+
+<section id="editor" class="screen">
+  <div class="wrap" id="edBox"></div>
+  <button class="fab" id="fab" title="إضافة سؤال"></button>
+</section>
+
+<section id="form" class="screen">
+  <button class="adm" id="adminBtn"></button><div class="prev" id="prevBar"><span>وضع المعاينة</span><button class="link" id="backEd1">العودة للتعديل</button></div>
+  <div class="wrap" id="formBox"></div>
+</section>
+
+<section id="result" class="screen"><div class="wrap">
+  <div class="gcard head"><h1 id="rh"></h1><div class="dsc">تم تسجيل إجاباتك.</div></div>
+  <div class="gcard res" style="animation-delay:.1s">
+    <div id="medal"></div>
+    <div class="score"><b id="sc"></b><span id="pc"></span></div>
+    <div class="track"><i id="tr"></i></div>
+    <div class="rmsg" id="rm"></div>
+    <div class="row" style="justify-content:center"><button class="btn" id="again">إرسال رد آخر</button><button class="link" id="backEd2">العودة للتعديل</button></div>
+  </div>
+</div></section>
+<section id="results" class="screen"><div class="wrap" id="resBox"></div></section>
+<div class="snack" id="snack"></div>
+
+<script>
+const PASS=70,HASH='6389f8b947d7bad87dd269c23cd238e64076b45f849e77f85d944ffd3f26e7a0';
+const P={chk:'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z',x:'M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z',del:'M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z',cp:'M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z',add:'M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z',eye:'M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z',star:'M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z',lock:'M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z',err:'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z',close:'M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z',up:'M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z',out:'M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5-5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z'};
+const ic=(k,c)=>`<svg class="ico ${c||''}" viewBox="0 0 24 24"><path d="${P[k]}"/></svg>`;
+const $=id=>document.getElementById(id);
+const h=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e};
+const rnd=n=>Math.floor(Math.random()*n);
+const good=['برافو! 🎉','برافو عليك! 👏','برافو! إجابة صحيحة ✨'];
+const SAMPLES=[
+ {q:'ما ناتج 7 × 8؟',opts:['54','56','63','49'],ans:1},
+ {q:'ما ناتج 12 × 12؟',opts:['124','132','144','148'],ans:2},
+ {q:'ما هي عاصمة مصر؟',opts:['القاهرة','الإسكندرية','الجيزة','أسوان'],ans:0},
+ {q:'كم عدد أيام الأسبوع؟',opts:['5','6','7','8'],ans:2},
+ {q:'أي كوكب يُعرف بالكوكب الأحمر؟',opts:['المشتري','المريخ','الزهرة','عطارد'],ans:1}];
+let data=null,isAdmin=false,qs=[],ans=[],inputs=[],nameIn=null,active=0,fails=0,lockUntil=0,st,results=[],delAll=0;
+try{const s=localStorage.getItem('gf_data');if(s)data=JSON.parse(s)}catch(e){}
+try{results=JSON.parse(localStorage.getItem('gf_results')||'[]')}catch(e){results=[]}
+if(!data){data={title:'اختبار تفاعلي',desc:'اختر الإجابة الصحيحة لكل سؤال. النجاح من 70% فأكثر.',qs:JSON.parse(JSON.stringify(SAMPLES))};persist()}
+if(data.instant===undefined)data.instant=true;
+function persist(){try{localStorage.setItem('gf_data',JSON.stringify(data))}catch(e){}}
+function saveRes(){try{localStorage.setItem('gf_results',JSON.stringify(results))}catch(e){}}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');$('bar').style.display=(id==='editor'||id==='results')?'flex':'none';scrollTo(0,0)}
+function snack(m){const s=$('snack');s.textContent=m;s.classList.add('show');clearTimeout(st);st=setTimeout(()=>s.classList.remove('show'),3400)}
+function norm(s){return String(s).toLowerCase().replace(/[\u064B-\u065F\u0670\u0640]/g,'').replace(/[أإآ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/[٠-٩]/g,d=>d.charCodeAt(0)-1632).replace(/[۰-۹]/g,d=>d.charCodeAt(0)-1776).replace(/\s+/g,' ').trim()}
+function accOf(q){return(q.acc||'').split(/[|\n]/).map(s=>s.trim()).filter(Boolean)}
+function liveQs(){return data.qs.map(q=>{
+  if(!q.q.trim())return null;
+  if(q.type==='text')return{type:'text',q:q.q.trim(),acc:accOf(q)};
+  const o=q.opts.map(x=>x.trim()),a=o[q.ans],o2=o.filter(Boolean);
+  if(!a||o2.length<2)return null;
+  return{type:'mc',q:q.q.trim(),opts:o2,ans:o2.indexOf(a)}}).filter(Boolean)}
+function problem(){if(!data.qs.length)return'أضف سؤالاً واحداً على الأقل.';
+  for(let i=0;i<data.qs.length;i++){const q=data.qs[i];
+    if(!q.q.trim())return`السؤال ${i+1}: اكتب نص السؤال.`;
+    if(q.type==='text')continue;
+    if(q.opts.filter(o=>o.trim()).length<2)return`السؤال ${i+1}: أضف خيارين على الأقل.`;
+    if(!(q.opts[q.ans]||'').trim())return`السؤال ${i+1}: حدد الإجابة الصحيحة.`}return''}
+function tabs(a){$('tabQ').classList.toggle('on',a==='q');$('tabR').classList.toggle('on',a==='r');$('tabQ').textContent='الأسئلة';$('tabR').textContent='النتائج ('+results.length+')'}
+
+/* ---- Login / navigation ---- */
+async function sha(s){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+async function login(){
+  const e=$('pwErr'),w=$('pwWrap'),now=Date.now();
+  if(now<lockUntil){e.textContent='محاولات كثيرة. انتظر '+Math.ceil((lockUntil-now)/1000)+' ثانية.';return}
+  let ok=false;try{ok=(await sha($('pw').value))===HASH}catch(x){e.textContent='المتصفح لا يدعم التحقق.';return}
+  if(ok){isAdmin=true;fails=0;$('pw').value='';e.textContent='';openEditor()}
+  else{fails++;e.textContent='كلمة المرور غير صحيحة. حاول مرة أخرى.';w.classList.remove('bad');void w.offsetWidth;w.classList.add('bad');if(fails>=5){lockUntil=Date.now()+30000;fails=0}}
+}
+$('loginBtn').onclick=login;$('pw').onkeydown=e=>{if(e.key==='Enter')login()};
+$('showPw').onchange=e=>$('pw').type=e.target.checked?'text':'password';
+$('guestBtn').onclick=()=>{isAdmin=false;openForm()};
+$('adminBtn').innerHTML=ic('lock')+' المسؤول';$('adminBtn').onclick=()=>{$('pwErr').textContent='';show('login')};
+$('logoutBtn').innerHTML=ic('out')+' خروج';$('previewBtn').innerHTML=ic('eye')+' معاينة';$('fab').innerHTML=ic('add');
+$('logoutBtn').onclick=()=>{isAdmin=false;openForm()};
+$('previewBtn').onclick=()=>{const p=problem();if(p){snack(p);return}openForm()};
+$('tabQ').onclick=openEditor;$('tabR').onclick=openResults;
+['backEd1','backEd2'].forEach(i=>$(i).onclick=()=>{stopConfetti();openEditor()});
+
+/* ---- Form (participant) ---- */
+function clearInvalid(c){c.classList.remove('invalid');const e=c.querySelector('.rerr');if(e)e.remove()}
+function feedback(c,ok,wrong){
+  const o=c.querySelector('.fb');if(o)o.remove();
+  const f=h('div','fb '+(ok?'g':'r'));f.innerHTML=ic(ok?'chk':'x');f.append(h('span','',ok?good[rnd(good.length)]:wrong));c.appendChild(f)}
+function openForm(){
+  qs=liveQs();ans=qs.map(q=>q.type==='text'?'':-1);inputs=[];
+  const B=$('formBox');B.innerHTML='';
+  $('prevBar').classList.toggle('show',isAdmin);$('adminBtn').style.display=isAdmin?'none':'';
+  const hd=h('div','gcard head');hd.append(h('h1','',data.title),h('div','dsc',data.desc));
+  if(qs.length)hd.append(h('div','hr'),h('div','reqn','* يشير إلى سؤال مطلوب'));
+  B.appendChild(hd);
+  if(!qs.length){B.appendChild(h('div','gcard','لا توجد أسئلة بعد. سيتم عرض الامتحان فور إضافتها.'));show('form');return}
+  const cards=[];
+  const nc=h('div','gcard');nc.style.animationDelay='.08s';
+  const nt=h('div','qt','الاسم');nt.appendChild(h('span','star','*'));
+  const nr=h('div','ansrow');nameIn=h('input','ans');nameIn.placeholder='اكتب اسمك';nameIn.maxLength=60;
+  nameIn.oninput=()=>clearInvalid(nc);nr.appendChild(nameIn);nc.append(nt,nr);B.appendChild(nc);cards.push(nc);
+  qs.forEach((q,qi)=>{
+    const c=h('div','gcard');c.style.animationDelay=(.08*(qi+2))+'s';
+    const t=h('div','qt',q.q);t.appendChild(h('span','star','*'));c.appendChild(t);
+    if(q.type==='text')buildText(q,qi,c);else buildMc(q,qi,c);
+    B.appendChild(c);cards.push(c)});
+  const f=h('div','row between');f.style.marginTop='16px';
+  const s=h('button','btn','إرسال'),cl=h('button','link','مسح النموذج');
+  s.onclick=()=>submit(cards);cl.onclick=openForm;f.append(s,cl);B.appendChild(f);
+  show('form');
+}
+function buildMc(q,qi,c){
+  const rows=q.opts.map((o,oi)=>{const r=h('div','opt');r.append(h('span','rd'),h('span','',o));r.onclick=()=>chooseMc(qi,oi,c,rows);c.appendChild(r);return r});
+}
+function chooseMc(qi,oi,c,rows){
+  const q=qs[qi];
+  if(data.instant){
+    if(ans[qi]>=0)return;ans[qi]=oi;clearInvalid(c);rows.forEach(r=>r.classList.add('done'));
+    const ok=oi===q.ans;rows[oi].classList.add(ok?'ok':'bad','pk');if(!ok)rows[q.ans].classList.add('rev');
+    feedback(c,ok,'غلط ❌ الإجابة الصحيحة: '+q.opts[q.ans]);
+  }else{ans[qi]=oi;clearInvalid(c);rows.forEach((r,k)=>r.classList.toggle('pk',k===oi))}
+}
+function buildText(q,qi,c){
+  const row=h('div','ansrow'),i=h('input','ans');i.placeholder='إجابتك';i.maxLength=300;inputs[qi]=i;row.appendChild(i);
+  const graded=data.instant&&q.acc.length;let btn=null;
+  const check=()=>{
+    if(i.disabled)return;const v=i.value.trim();if(!v)return;
+    const ok=q.acc.some(a=>norm(a)===norm(v));
+    i.disabled=true;i.classList.add(ok?'ok':'bad');ans[qi]=v;clearInvalid(c);if(btn)btn.remove();
+    feedback(c,ok,'غلط ❌ الإجابة الصحيحة: '+q.acc[0]);
+  };
+  if(graded){btn=h('button','link','تأكيد');btn.onclick=check;row.appendChild(btn);i.onkeydown=e=>{if(e.key==='Enter')check()}}
+  i.oninput=()=>{ans[qi]=i.value;clearInvalid(c)};
+  c.appendChild(row);
+}
+function isEmpty(i){return typeof ans[i]==='number'?ans[i]<0:!String(ans[i]).trim()}
+function submit(cards){
+  const miss=[];if(!nameIn.value.trim())miss.push(0);
+  ans.forEach((a,i)=>{if(isEmpty(i))miss.push(i+1)});
+  if(miss.length){
+    miss.forEach(k=>{const c=cards[k];c.classList.add('invalid');if(!c.querySelector('.rerr')){const e=h('div','rerr');e.innerHTML=ic('err');e.append(h('span','','هذا سؤال مطلوب'));c.appendChild(e)}});
+    cards[miss[0]].scrollIntoView({behavior:'smooth',block:'center'});return}
+  finish();
+}
+function finish(){
+  let sc=0,tot=0;
+  qs.forEach((q,i)=>{
+    if(q.type==='text'){if(q.acc.length){tot++;if(q.acc.some(a=>norm(a)===norm(ans[i])))sc++}}
+    else{tot++;if(ans[i]===q.ans)sc++}});
+  const pct=tot?Math.round(sc/tot*100):0,pass=tot>0&&pct>=PASS;
+  if(!isAdmin){results.unshift({id:Date.now().toString(36)+rnd(1e6).toString(36),name:nameIn.value.trim(),sc,tot,pct,pass,ts:Date.now()});saveRes()}
+  $('rh').textContent=data.title;
+  if(tot){
+    $('sc').textContent=sc+' / '+tot;$('pc').textContent='النسبة المئوية: '+pct+'%';
+    $('medal').innerHTML=pass?`<div class="medal">${ic('star')+ic('star')+ic('star')}</div>`:`<div class="medal fail">${ic('up')}</div>`;
+    $('rm').textContent=pass?'تهانينا! لقد اجتزت الاختبار بنجاح 🎉':'حظ أوفر المرة القادمة! راجع الأسئلة وحاول مرة أخرى.';
+  }else{$('sc').textContent='—';$('pc').textContent='';$('medal').innerHTML='';$('rm').textContent='شكراً لمشاركتك. تم تسجيل إجاباتك.'}
+  $('backEd2').style.display=isAdmin?'':'none';
+  const tr=$('tr');tr.style.transition='none';tr.style.width='0';show('result');void tr.offsetWidth;tr.style.transition='';
+  requestAnimationFrame(()=>tr.style.width=pct+'%');
+  if(pass)launchConfetti();
+}
+$('again').onclick=()=>{stopConfetti();openForm()};
+
+/* ---- Editor (admin) ---- */
+function openEditor(){active=Math.min(active,Math.max(0,data.qs.length-1));renderEditor();tabs('q');show('editor')}
+function renderEditor(focusLast){
+  $('barTitle').textContent=data.title||'نموذج بدون عنوان';
+  const L=$('edBox');L.innerHTML='';
+  const hd=h('div','gcard head');
+  const t=h('input','htitle');t.value=data.title;t.placeholder='عنوان النموذج';
+  t.oninput=()=>{data.title=t.value;$('barTitle').textContent=t.value||'نموذج بدون عنوان';persist()};
+  const d=h('input','hdesc');d.value=data.desc;d.placeholder='وصف النموذج';d.oninput=()=>{data.desc=d.value;persist()};
+  hd.append(t,d);L.appendChild(hd);
+  const sc=h('div','gcard'),sr=h('div','setrow'),tx=h('div');
+  tx.append(h('div','qt','إظهار "برافو" و"غلط" فور اختيار الإجابة'),h('div','dsc','عند الإيقاف لا تظهر أي نتيجة أثناء الحل ويمكن للمشارك تغيير إجابته، وتظهر الدرجة بعد الإرسال فقط.'));
+  const sw=h('button','sw'+(data.instant?' on':''));sw.setAttribute('role','switch');sw.setAttribute('aria-checked',data.instant);sw.title='تشغيل / إيقاف';
+  sw.onclick=()=>{data.instant=!data.instant;persist();sw.classList.toggle('on',data.instant);sw.setAttribute('aria-checked',data.instant);snack(data.instant?'تم تشغيل خاصية برافو / غلط':'تم إيقاف خاصية برافو / غلط')};
+  sr.append(tx,sw);sc.appendChild(sr);L.appendChild(sc);
+  if(!data.qs.length)L.appendChild(h('div','gcard','لا توجد أسئلة. اضغط على زر + لإضافة أول سؤال.'));
+  data.qs.forEach((q,qi)=>{
+    const isT=q.type==='text';
+    const c=h('div','gcard edit'+(qi===active?' active':''));c.style.animationDelay=Math.min(qi*.05,.4)+'s';
+    c.onfocusin=c.onclick=()=>{if(active!==qi){active=qi;[...L.querySelectorAll('.gcard.edit')].forEach((x,i)=>x.classList.toggle('active',i===qi))}};
+    const tr=h('div','trow');
+    const qt=h('input','qtitle');qt.value=q.q;qt.placeholder='السؤال';qt.oninput=()=>{q.q=qt.value;persist()};
+    const sl=h('select','tsel');sl.innerHTML='<option value="mc">اختيار من متعدد</option><option value="text">إجابة مفتوحة (نص)</option>';sl.value=isT?'text':'mc';
+    sl.onchange=()=>{q.type=sl.value;persist();active=qi;renderEditor()};
+    tr.append(qt,sl);c.appendChild(tr);
+    if(isT){
+      c.appendChild(h('div','uprev','سيكتب المشارك إجابته هنا'));
+      const ac=h('div','acc');ac.appendChild(h('label','','الإجابات المقبولة (اختياري) — افصل بينها بعلامة |'));
+      const ai=h('input','uline');ai.value=q.acc||'';ai.placeholder='مثال: القاهرة | cairo';ai.oninput=()=>{q.acc=ai.value;persist()};
+      ac.appendChild(ai);c.appendChild(ac);
+    }else{
+      const ol=h('div');
+      q.opts.forEach((o,oi)=>{
+        const r=h('div','orow'),rd=h('span','rd'+(oi===q.ans?' sel':''));rd.title='الإجابة الصحيحة';
+        rd.onclick=()=>{q.ans=oi;persist();[...ol.children].forEach((x,k)=>x.firstChild.classList.toggle('sel',k===oi))};
+        const i=h('input','uline');i.value=o;i.placeholder='الخيار '+(oi+1);i.oninput=()=>{q.opts[oi]=i.value;persist()};
+        const x=h('button','ib');x.innerHTML=ic('close');x.title='حذف الخيار';
+        x.onclick=()=>{if(q.opts.length<=2){snack('يلزم خياران على الأقل.');return}q.opts.splice(oi,1);if(q.ans===oi)q.ans=0;else if(q.ans>oi)q.ans--;persist();renderEditor()};
+        r.append(rd,i,x);ol.appendChild(r)});
+      c.appendChild(ol);
+      const ad=h('button','link','+ إضافة خيار');ad.style.marginInlineStart='-8px';
+      ad.onclick=()=>{if(q.opts.length>=6){snack('الحد الأقصى 6 خيارات.');return}q.opts.push('');persist();active=qi;renderEditor(true)};
+      c.appendChild(ad);
+    }
+    const f=h('div','efoot');f.appendChild(h('span','',isT?'اتركه فارغاً ليُسجَّل الرد دون احتسابه في الدرجة':'الدائرة الخضراء = الإجابة الصحيحة'));
+    const bt=h('div','row');bt.style.gap='2px';
+    const cp=h('button','ib');cp.innerHTML=ic('cp');cp.title='تكرار السؤال';
+    cp.onclick=()=>{data.qs.splice(qi+1,0,JSON.parse(JSON.stringify(q)));active=qi+1;persist();renderEditor();snack('تم تكرار السؤال')};
+    const dl=h('button','ib');dl.innerHTML=ic('del');dl.title='حذف السؤال';
+    dl.onclick=()=>{data.qs.splice(qi,1);active=Math.max(0,qi-1);persist();renderEditor();snack('تم حذف السؤال')};
+    bt.append(cp,dl);f.appendChild(bt);c.appendChild(f);L.appendChild(c);
+    if(focusLast&&qi===active){const ins=c.querySelectorAll('.orow .uline');ins[ins.length-1].focus()}
+  });
+}
+$('fab').onclick=()=>{data.qs.push({type:'mc',q:'',opts:['','',''],ans:0});active=data.qs.length-1;persist();renderEditor();
+  const cs=document.querySelectorAll('.gcard.edit');const c=cs[cs.length-1];c.scrollIntoView({behavior:'smooth',block:'center'});c.querySelector('.qtitle').focus()};
+
+/* ---- Results (admin) ---- */
+function fdate(t){try{return new Date(t).toLocaleString('ar-EG',{dateStyle:'short',timeStyle:'short'})}catch(e){return new Date(t).toLocaleString()}}
+function openResults(){
+  tabs('r');const B=$('resBox');B.innerHTML='';
+  const n=results.length,ps=results.filter(r=>r.pass).length,g=results.filter(r=>r.tot>0),avg=g.length?Math.round(g.reduce((s,r)=>s+r.pct,0)/g.length):0;
+  const s=h('div','gcard head');s.appendChild(h('h1','','النتائج'));
+  const st2=h('div','stats');
+  [[n,'عدد المشاركين'],[n?Math.round(ps/n*100)+'%':'—','نسبة النجاح'],[n?avg+'%':'—','متوسط الدرجات']].forEach(a=>{const d=h('div','stat');d.append(h('b','',String(a[0])),h('span','',a[1]));st2.appendChild(d)});
+  s.appendChild(st2);B.appendChild(s);
+  const c=h('div','gcard');c.style.animationDelay='.1s';
+  if(!n){c.appendChild(h('div','dsc','لا توجد نتائج بعد. تظهر هنا نتائج من أدّوا الامتحان على هذا الجهاز.'));B.appendChild(c);return}
+  const wrap=h('div','scroll'),tb=h('table','tbl'),hr=h('tr');
+  ['الاسم','الدرجة','النسبة','الحالة','التاريخ',''].forEach(x=>hr.appendChild(h('th','',x)));
+  const th=h('thead');th.appendChild(hr);tb.appendChild(th);
+  const bd=h('tbody');
+  results.forEach(r=>{
+    const tr=h('tr');
+    const b=h('span','badge '+(r.tot?(r.pass?'p':'f'):''),r.tot?(r.pass?'ناجح':'راسب'):'بدون درجة');
+    const bc=h('td');bc.appendChild(b);
+    const dl=h('button','ib danger');dl.innerHTML=ic('del');dl.title='حذف النتيجة';
+    dl.onclick=()=>{results=results.filter(x=>x.id!==r.id);saveRes();openResults();snack('تم حذف النتيجة')};
+    const dc=h('td');dc.appendChild(dl);
+    tr.append(h('td','',r.name||'—'),h('td','',r.tot?r.sc+' / '+r.tot:'—'),h('td','',r.tot?r.pct+'%':'—'),bc,h('td','',fdate(r.ts)),dc);bd.appendChild(tr)});
+  tb.appendChild(bd);wrap.appendChild(tb);c.appendChild(wrap);
+  const da=h('button','link danger','حذف كل النتائج');da.style.marginTop='12px';
+  da.onclick=()=>{if(!delAll){delAll=setTimeout(()=>{delAll=0;da.textContent='حذف كل النتائج'},4000);da.textContent='اضغط مرة أخرى للتأكيد';return}
+    clearTimeout(delAll);delAll=0;results=[];saveRes();openResults();snack('تم حذف كل النتائج')};
+  c.appendChild(da);B.appendChild(c);
+  show('results');
+}
+
+/* ---- Confetti ---- */
+const cv=$('confetti'),cx=cv.getContext('2d');let parts=[],raf=null;
+function size(){cv.width=innerWidth;cv.height=innerHeight}size();addEventListener('resize',size);
+function launchConfetti(){
+  const cols=['#4285f4','#ea4335','#fbbc04','#34a853','#673ab7','#f9ab00','#ffffff'];
+  parts=Array.from({length:190},()=>({x:Math.random()*cv.width,y:-20-Math.random()*cv.height*.7,w:6+Math.random()*7,h:10+Math.random()*9,c:cols[rnd(7)],vy:2+Math.random()*4,vx:-1.5+Math.random()*3,r:Math.random()*6,vr:-.25+Math.random()*.5}));
+  cancelAnimationFrame(raf);const t0=performance.now();
+  (function tick(t){
+    cx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(p=>{p.x+=p.vx+Math.sin(p.y/30);p.y+=p.vy;p.r+=p.vr;cx.save();cx.translate(p.x,p.y);cx.rotate(p.r);cx.fillStyle=p.c;cx.fillRect(-p.w/2,-p.h/2,p.w,p.h);cx.restore()});
+    parts=parts.filter(p=>p.y<cv.height+30);
+    if(parts.length&&t-t0<9000)raf=requestAnimationFrame(tick);else cx.clearRect(0,0,cv.width,cv.height);
+  })(t0);
+}
+function stopConfetti(){cancelAnimationFrame(raf);parts=[];cx.clearRect(0,0,cv.width,cv.height)}
+openForm();
+</script>
+</body>
+</html>
